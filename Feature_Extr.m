@@ -1,11 +1,11 @@
-function Untitled( dcm_path,nii_path, fund_path )
+function Feature_Extr( dcm_path,nii_path, fund_path )
 
 filename = fullfile(fund_path,'data.csv');
 fid = fopen(filename,'w');
 
-% ***************¶ÁÈ¡³õÊ¼»¯************************************************
-%%% dcmÎÄ¼ş
-I=dicomread(dcm_path); %¶ÁÈ¡Í¼Ïñ
+% ***************è¯»å–åˆå§‹åŒ–************************************************
+%%% dcmæ–‡ä»¶
+I=dicomread(dcm_path); %è¯»å–å›¾åƒ
 
 info_value = dicominfo(dcm_path);
 pixel_spacing = info_value.PixelSpacing;
@@ -21,9 +21,9 @@ if flag < 0
     I = uint16(I);
 end 
 
-% I=dicomread('C:\Users\95720\Desktop\Ò½Ñ§Í¼Ïñ\roi1 540Àı\8\IMG-0001-00001.dcm'); %¶ÁÈ¡Í¼Ïñ
+% I=dicomread('C:\Users\95720\Desktop\åŒ»å­¦å›¾åƒ\roi1 540ä¾‹\8\IMG-0001-00001.dcm'); %è¯»å–å›¾åƒ
 % figure(1)
-% imagesc(I);%ÏÔÊ¾Í¼Ïñ
+% imagesc(I);%æ˜¾ç¤ºå›¾åƒ
 temp = double(I);
 v= max(max(temp));
 ss= min(min(temp));
@@ -34,23 +34,23 @@ imshow(dcm_img)
 imwrite(dcm_img,fullfile(fund_path,'dcm_img.jpg'));
 % figure(3)
 % imshow(I)
-% img =uint16(I);              %½«»Ò¶È¼¶Ó³Éäµ½0~255
+% img =uint16(I);              %å°†ç°åº¦çº§æ˜ å°„åˆ°0~255
 % low=min(min(img));
 % high=max(max(img));
-% maxgray=high-low;           %¼ÆËã´°¿í
+% maxgray=high-low;           %è®¡ç®—çª—å®½
 % rate=256/maxgray;
 % img=I*rate;
-% img=img+abs(min(min(img)));    %¼Ó´°
-% dcm_img=uint8(img);           %×ª»¯Îª8Î»µÄÎ»Í¼Êı¾İ¸ñÊ½
+% img=img+abs(min(min(img)));    %åŠ çª—
+% dcm_img=uint8(img);           %è½¬åŒ–ä¸º8ä½çš„ä½å›¾æ•°æ®æ ¼å¼
 % figure(2)
 % imshow(dcm_img)
 % imwrite(dcm_img,fullfile(fund_path,'dcm_img.jpg'));
 
 
 
-%%% niiÎÄ¼ş
+%%% niiæ–‡ä»¶
 info  = load_nii (nii_path);
-% info  = load_nii ('C:\Users\95720\Desktop\ROI Í¼ÏñÍ¼\1\1.nii');
+% info  = load_nii ('C:\Users\95720\Desktop\ROI å›¾åƒå›¾\1\1.nii');
 nii_img_r = info.img;
 
 qq = size(nii_img_r,3); 
@@ -93,17 +93,17 @@ end
 
 
 
-% *************Ô­Í¼ºÍmaskÏàÓë**********************************************
+% *************åŸå›¾å’Œmaskç›¸ä¸**********************************************
 roi_img_w = dcm_img.*uint8(nii_img);
 % figure(4)
 % imshow(roi_img_w);
 imwrite(roi_img_w,fullfile(fund_path,'roi_img_w.jpg'));
 % *************************************************************************
 
-% *****************************Ô­Í¼ÉÏÏÔÊ¾roi*******************************
+% *****************************åŸå›¾ä¸Šæ˜¾ç¤ºroi*******************************
 show_img = dcm_img;
 [rows , cols ] = size(show_img);
-%%% ***********×îĞ¡ÄâºÏ¾ØĞÎ
+%%% ***********æœ€å°æ‹ŸåˆçŸ©å½¢
 up_line = 255;
 down_line = 0;
 left_line = 255;
@@ -134,9 +134,9 @@ end
 imwrite(show_img,fullfile(fund_path,'show_img.jpg'));
 % *************************************************************************
 
-% **************************Çó³öÕæµÄroi************************************
-rect=[left_line up_line right_line-left_line down_line-up_line];%¶à±ßĞÎµÄ×îĞ¡Íâ½Ó¾ØĞÎ 
-roi_true=imcrop(dcm_img,rect);%²Ã¼ôROIÍâ½Ó¾ØĞÎ£¬´Ë´¦rect=[xmin ymin width hight] 
+% **************************æ±‚å‡ºçœŸçš„roi************************************
+rect=[left_line up_line right_line-left_line down_line-up_line];%å¤šè¾¹å½¢çš„æœ€å°å¤–æ¥çŸ©å½¢ 
+roi_true=imcrop(dcm_img,rect);%è£å‰ªROIå¤–æ¥çŸ©å½¢ï¼Œæ­¤å¤„rect=[xmin ymin width hight] 
 % imshow(roi_true);
 imwrite(roi_true,fullfile(fund_path,'roi_true.jpg'));
 % *************************************************************************
@@ -184,8 +184,8 @@ fprintf(fid, 'ORI\n');
 for count = 1:5
     dcm_img_do = I;
     if count ~= 1
-        %%%% ÂË²¨
-        fprintf(fid, '%1.1fÂË²¨\n',sigma_m(count-1));
+        %%%% æ»¤æ³¢
+        fprintf(fid, '%1.1fæ»¤æ³¢\n',sigma_m(count-1));
         sigma = sigma_m(count-1);
         gausFilter = fspecial('gaussian', [5,5], sigma);
         dcm_img_do = imfilter(dcm_img, gausFilter, 'replicate');
@@ -196,9 +196,9 @@ for count = 1:5
 
     [ROIonly,levels] = prepareVolume(dcm_img_do,nii_img,'PETscan',4,3.27,1,5,'Matrix','Lloyd',32);
     % [ROIonly,levels] = prepareVolume(dcm_img_do,nii_img);
-    [GLCM] = getGLCM(ROIonly,levels); %µ÷ÓÃgetGLCM»ñµÃGCLM¾ØÕó
-    % [glcmTextures] = getGLCMtextures(GLCM);%µ÷ÓÃgetGCLMtexturesº¯Êı»ñµÃGCLMÎÆÀí
-    [glcmTextures] = computeGLCMRadiomics(GLCM);%µ÷ÓÃgetGCLMtexturesº¯Êı»ñµÃGCLMÎÆÀí 
+    [GLCM] = getGLCM(ROIonly,levels); %è°ƒç”¨getGLCMè·å¾—GCLMçŸ©é˜µ
+    % [glcmTextures] = getGLCMtextures(GLCM);%è°ƒç”¨getGCLMtextureså‡½æ•°è·å¾—GCLMçº¹ç†
+    [glcmTextures] = computeGLCMRadiomics(GLCM);%è°ƒç”¨getGCLMtextureså‡½æ•°è·å¾—GCLMçº¹ç† 
     cellperson = struct2cell(glcmTextures);
     len = length(cellperson);
     % fprintf(fid, 'GLCM\n');
@@ -247,79 +247,7 @@ end
 
 
 
-% [globalTextures] = getGlobalTextures(ROIonly,100);
-% [aucCSH] = getAUCCSH(ROIonly);
-% [SUVmax,SUVpeak,SUVmean,aucCSH] = getSUVmetrics(ROIonly);
-% perimeter = get_perimeter(nii_img);
-% [diameter,myarea] =get_diameter_area( nii_img );
-% orthocenter = get_orthocenter( nii_img,myarea );
-% shape = get_shape(perimeter ,myarea );
-% Hu_Moment = HuSquare(roi_true);
 
-
-%%%[G,gabout] = gaborfilter1(ROIonly,2,4,16,pi/3); 
-%%% figure,imshow(gabout,[]);
-
-
-
-% % % =================================================
-% % ½øĞĞĞ¡²¨·Ö½â
-% % % =================================================
-% % 
-% % ¶ÔÍ¼Ïñ½øĞĞ2²ãµÄĞ¡²¨·Ö½â
-% % N = 2 ;
-% % [c,s] = wavedec2(ROIonly,N,'db1');
-% % 
-% % % =================================================
-% % ÌáÈ¡¸÷²ã¶ÔÓ¦µÄµÍÆµºÍ¸ßÆµÏµÊı
-% % % =================================================
-% % 
-% % ¶ÔÓÚÔ­Ê¼Í¼Ïñ512¡Á512 £¬ÆäĞ¡²¨·Ö½âµÚ1²ãÎ¬¶ÈÎª256¡Á256£¬µÚ2²ãÎ¬¶ÈÎª128¡Á128
-% % ÌáÈ¡Ğ¡²¨·Ö½âÖĞµÚ1²ãµÍÆµÏµÊıºÍ¸ßÆµÏµÊı
-% % a_ca1 = appcoef2(c,s,'db1',1);
-% % a_ch1 = detcoef2('h',c,s,1);
-% % a_cv1 = detcoef2('v',c,s,1);
-% % a_cd1 = detcoef2('d',c,s,1);
-% % ÏÔÊ¾µÚ1²ãµÄ¸÷·ÖÁ¿
-% % figure(6);
-% % subplot(4,4,[3,4,7,8]);imshow(a_ch1,[]);
-% % subplot(4,4,[9,10,13,14]);imshow(a_cv1,[]);
-% % subplot(4,4,[11,12,15,16]);imshow(a_cd1,[]);
-% % 
-% % ÌáÈ¡µÚ2²ãµÄµÍÆµÏµÊıºÍ¸ßÆµÏµÊı
-% % ca2 = appcoef2(c,s,'db1',2);
-% % ch2 = detcoef2('h',c,s,2);
-% % cv2 = detcoef2('v',c,s,2);
-% % cd2 = detcoef2('d',c,s,2);
-% % % ÏÔÊ¾µÚ2²ãµÄ¸÷·ÖÁ¿
-% % subplot(4,4,1);imshow(ca2,[]);
-% % subplot(4,4,2);imshow(ch2,[]);
-% % subplot(4,4,5);imshow(cv2,[]);
-% % subplot(4,4,6);imshow(cd2,[]);
-% % 
-% % 
-% % % =================================================
-% % ·Ö±ğ¶Ô¸÷ÆµÂÊ³É·Ö½øĞĞÖØ¹¹
-% % % =================================================
-% % 
-% % Ê¹ÓÃµÚ2²ã½øĞĞÖØ¹¹
-% % recon_a1 = wrcoef2('a',c,s,'db1',2);
-% % recon_h1 = wrcoef2('h',c,s,'db1',2);
-% % recon_v1 = wrcoef2('v',c,s,'db1',2);
-% % recon_d1 = wrcoef2('d',c,s,'db1',2);
-% % ÏÔÊ¾¸÷ÖØ¹¹µÄ³É·Ö Î¬¶È¶¼ÔÚ512¡Á512
-% % recon_set = [recon_a1,recon_h1;recon_v1,recon_d1];  
-% % figure(7);imshow(recon_set,[]);title('µÚ2²ãĞ¡²¨ÏµÊıµÄÖØ¹¹');
-% % 
-% % % =================================================
-% % ÖØ¹¹³öÔ­Ê¼Í¼Ïñ
-% % % =================================================
-% % 
-% % recon_img = recon_a1+recon_h1+recon_v1+recon_d1;
-% % recon_img = mat2gray(recon_img );
-% % figure(8);imshow(recon_img );title('ÖØ¹¹³öµÄÔ­Ê¼Í¼Ïñ');
-% % WT = wavedec2(ROIonly, 2, 'db4');
-% % LL = WT.dec;
 
 
 fclose(fid);
